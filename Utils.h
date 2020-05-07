@@ -348,12 +348,6 @@ void readEEPROMState()
       UseBlynk = false;
     else
       UseBlynk = true;
-
-
-
-
-
-
   }
   else
   {
@@ -373,9 +367,6 @@ void readEEPROMState()
     SDL2PubNubCode_Sub = "XX";
     BlynkAuthCode = "";
     writeEEPROMState();
-
-
-
   }
   Serial.println("Reading EEPROM");
   Serial.println("EEPROM");
@@ -459,8 +450,6 @@ String returnDirectionFromDegrees(int degrees)
 
 void updateAllWeatherVariables()
 {
-
-
 
   heapSize = ESP.getFreeHeap();
 

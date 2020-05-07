@@ -89,7 +89,7 @@ void WiFiManager::addParameter(WiFiManagerParameter *p) {
 
 void WiFiManager::setupConfigPortal() {
   dnsServer.reset(new DNSServer());
-  server.reset(new ESP8266WebServer(80));
+  server.reset(new ESPWebServer(80));
 
   DEBUG_WM(F(""));
   _configPortalStart = millis();
@@ -335,14 +335,14 @@ int WiFiManager::connectWifi(String ssid, String pass) {
   int connRes = waitForConnectResult();
   DEBUG_WM ("Connection result: ");
   DEBUG_WM ( connRes );
-  #ifdef NO_EXTRA_4K_HEAP
+#ifdef NO_EXTRA_4K_HEAP
   //not connected, WPS enabled, no pass - first attempt
   if (_tryWPS && connRes != WL_CONNECTED && pass == "") {
     startWPS();
     //should be connected at the end of WPS
     connRes = waitForConnectResult();
   }
-  #endif
+#endif
   return connRes;
 }
 
@@ -448,12 +448,12 @@ void WiFiManager::handleRoot() {
     return;
   }
 
-  String page = FPSTR(HTTP_HEAD);
+  String page = FPSTR(HTTP_HEADER_START);
   page.replace("{v}", "Options");
   page += FPSTR(HTTP_SCRIPT);
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
-  page += FPSTR(HTTP_HEAD_END);
+  page += FPSTR(HTTP_HEADER_END);
   page += "<h1>";
   page += _apName;
   page += "</h1>";
@@ -468,12 +468,12 @@ void WiFiManager::handleRoot() {
 /** Wifi config page handler */
 void WiFiManager::handleWifi(boolean scan) {
 
-  String page = FPSTR(HTTP_HEAD);
+  String page = FPSTR(HTTP_HEADER_START);
   page.replace("{v}", "Config OurWeather");
   page += FPSTR(HTTP_SCRIPT);
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
-  page += FPSTR(HTTP_HEAD_END);
+  page += FPSTR(HTTP_HEADER_END);
 
   if (scan) {
     int n = WiFi.scanNetworks();
@@ -635,8 +635,22 @@ void WiFiManager::handleWifiSave() {
       altitude_meters = altitudeF;
 
   }
+    
+      RtcDateTime userSetDT = RtcDateTime(_date.c_str(), _time.c_str());
+      Serial.println("Updating DateTime in RTC");
+      Serial.println(userSetDT);
+      Rtc.SetDateTime(userSetDT);
+      
 
+  RtcDateTime now = Rtc.GetDateTime();
 
+  Serial.print("WM: >>  RTC Set > ");
+  //String currentTimeString;
+  //currentTimeString = Rtc.GetDateTime();
+  //Serial.print("RTC Time= "); 
+  Serial.println(Rtc.GetDateTime());
+    
+  //Rtc.SetDateTime();
   DEBUG_WM(_ssid);
   DEBUG_WM(_pass);
   DEBUG_WM(_time);
@@ -690,12 +704,12 @@ void WiFiManager::handleWifiSave() {
   }
   else
     DEBUG_WM("Not updating DateTime in RTC");
-  String page = FPSTR(HTTP_HEAD);
+  String page = FPSTR(HTTP_HEADER_START);
   page.replace("{v}", "Credentials Saved");
   page += FPSTR(HTTP_SCRIPT);
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
-  page += FPSTR(HTTP_HEAD_END);
+  page += FPSTR(HTTP_HEADER_END);
   page += FPSTR(HTTP_SAVED);
   page += FPSTR(HTTP_END);
 
@@ -710,12 +724,12 @@ void WiFiManager::handleWifiSave() {
 void WiFiManager::handleInfo() {
   DEBUG_WM(F("Info"));
 
-  String page = FPSTR(HTTP_HEAD);
+  String page = FPSTR(HTTP_HEADER_START);
   page.replace("{v}", "Info");
   page += FPSTR(HTTP_SCRIPT);
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
-  page += FPSTR(HTTP_HEAD_END);
+  page += FPSTR(HTTP_HEADER_END);
   page += F("<dl>");
   page += F("<dt>Chip ID</dt><dd>");
   page += ESP.getChipId();
@@ -750,12 +764,12 @@ void WiFiManager::handleInfo() {
 void WiFiManager::handleReset() {
   DEBUG_WM(F("Reset"));
 
-  String page = FPSTR(HTTP_HEAD);
+  String page = FPSTR(HTTP_HEADER_START);
   page.replace("{v}", "Info");
   page += FPSTR(HTTP_SCRIPT);
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
-  page += FPSTR(HTTP_HEAD_END);
+  page += FPSTR(HTTP_HEADER_END);
   page += F("Module will reset in a few seconds.");
   page += FPSTR(HTTP_END);
   server->send(200, "text/html", page);

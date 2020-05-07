@@ -22,7 +22,7 @@
 
 
 /***************************************************************************
- PRIVATE FUNCTIONS
+  PRIVATE FUNCTIONS
  ***************************************************************************/
 Adafruit_BMP280::Adafruit_BMP280()
 
@@ -34,9 +34,9 @@ Adafruit_BMP280::Adafruit_BMP280()
 bool Adafruit_BMP280::begin(uint8_t a) {
   _i2caddr = a;
 
- 
-    // i2c
-    Wire.begin(5,4);
+
+  // i2c
+  Wire.begin(5, 4);
 
   if (read8(BMP280_REGISTER_CHIPID) != 0x58)
     return false;
@@ -55,11 +55,11 @@ bool Adafruit_BMP280::begin(uint8_t a) {
 void Adafruit_BMP280::write8(byte reg, byte value)
 {
 
-    Wire.beginTransmission((uint8_t)_i2caddr);
-    Wire.write((uint8_t)reg);
-    Wire.write((uint8_t)value);
-    Wire.endTransmission();
- 
+  Wire.beginTransmission((uint8_t)_i2caddr);
+  Wire.write((uint8_t)reg);
+  Wire.write((uint8_t)value);
+  Wire.endTransmission();
+
 }
 
 /**************************************************************************/
@@ -71,14 +71,14 @@ uint8_t Adafruit_BMP280::read8(byte reg)
 {
   uint8_t value;
 
-  
-    Wire.beginTransmission((uint8_t)_i2caddr);
-    Wire.write((uint8_t)reg);
-    Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_i2caddr, (byte)1);
-    value = Wire.read();
 
- 
+  Wire.beginTransmission((uint8_t)_i2caddr);
+  Wire.write((uint8_t)reg);
+  Wire.endTransmission();
+  Wire.requestFrom((uint8_t)_i2caddr, (byte)1);
+  value = Wire.read();
+
+
   return value;
 }
 
@@ -92,17 +92,17 @@ uint16_t Adafruit_BMP280::read16(byte reg)
   uint16_t value;
 
 
-    Wire.beginTransmission((uint8_t)_i2caddr);
-    Wire.write((uint8_t)reg);
-    Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_i2caddr, (byte)2);
-    value = (Wire.read() << 8) | Wire.read();
+  Wire.beginTransmission((uint8_t)_i2caddr);
+  Wire.write((uint8_t)reg);
+  Wire.endTransmission();
+  Wire.requestFrom((uint8_t)_i2caddr, (byte)2);
+  value = (Wire.read() << 8) | Wire.read();
 
- 
+
   return value;
 }
 
-uint16_t Adafruit_BMP280::read16_LE(byte reg) 
+uint16_t Adafruit_BMP280::read16_LE(byte reg)
 {
   uint16_t temp = read16(reg);
   return (temp >> 8) | (temp << 8);
@@ -138,16 +138,16 @@ uint32_t Adafruit_BMP280::read24(byte reg)
   uint32_t value;
 
 
-    Wire.beginTransmission((uint8_t)_i2caddr);
-    Wire.write((uint8_t)reg);
-    Wire.endTransmission();
-    Wire.requestFrom((uint8_t)_i2caddr, (byte)3);
-    
-    value = Wire.read();
-    value <<= 8;
-    value |= Wire.read();
-    value <<= 8;
-    value |= Wire.read();
+  Wire.beginTransmission((uint8_t)_i2caddr);
+  Wire.write((uint8_t)reg);
+  Wire.endTransmission();
+  Wire.requestFrom((uint8_t)_i2caddr, (byte)3);
+
+  value = Wire.read();
+  value <<= 8;
+  value |= Wire.read();
+  value <<= 8;
+  value |= Wire.read();
 
 
   return value;
@@ -160,19 +160,19 @@ uint32_t Adafruit_BMP280::read24(byte reg)
 /**************************************************************************/
 void Adafruit_BMP280::readCoefficients(void)
 {
-    _bmp280_calib.dig_T1 = read16_LE(BMP280_REGISTER_DIG_T1);
-    _bmp280_calib.dig_T2 = readS16_LE(BMP280_REGISTER_DIG_T2);
-    _bmp280_calib.dig_T3 = readS16_LE(BMP280_REGISTER_DIG_T3);
+  _bmp280_calib.dig_T1 = read16_LE(BMP280_REGISTER_DIG_T1);
+  _bmp280_calib.dig_T2 = readS16_LE(BMP280_REGISTER_DIG_T2);
+  _bmp280_calib.dig_T3 = readS16_LE(BMP280_REGISTER_DIG_T3);
 
-    _bmp280_calib.dig_P1 = read16_LE(BMP280_REGISTER_DIG_P1);
-    _bmp280_calib.dig_P2 = readS16_LE(BMP280_REGISTER_DIG_P2);
-    _bmp280_calib.dig_P3 = readS16_LE(BMP280_REGISTER_DIG_P3);
-    _bmp280_calib.dig_P4 = readS16_LE(BMP280_REGISTER_DIG_P4);
-    _bmp280_calib.dig_P5 = readS16_LE(BMP280_REGISTER_DIG_P5);
-    _bmp280_calib.dig_P6 = readS16_LE(BMP280_REGISTER_DIG_P6);
-    _bmp280_calib.dig_P7 = readS16_LE(BMP280_REGISTER_DIG_P7);
-    _bmp280_calib.dig_P8 = readS16_LE(BMP280_REGISTER_DIG_P8);
-    _bmp280_calib.dig_P9 = readS16_LE(BMP280_REGISTER_DIG_P9);
+  _bmp280_calib.dig_P1 = read16_LE(BMP280_REGISTER_DIG_P1);
+  _bmp280_calib.dig_P2 = readS16_LE(BMP280_REGISTER_DIG_P2);
+  _bmp280_calib.dig_P3 = readS16_LE(BMP280_REGISTER_DIG_P3);
+  _bmp280_calib.dig_P4 = readS16_LE(BMP280_REGISTER_DIG_P4);
+  _bmp280_calib.dig_P5 = readS16_LE(BMP280_REGISTER_DIG_P5);
+  _bmp280_calib.dig_P6 = readS16_LE(BMP280_REGISTER_DIG_P6);
+  _bmp280_calib.dig_P7 = readS16_LE(BMP280_REGISTER_DIG_P7);
+  _bmp280_calib.dig_P8 = readS16_LE(BMP280_REGISTER_DIG_P8);
+  _bmp280_calib.dig_P9 = readS16_LE(BMP280_REGISTER_DIG_P9);
 }
 
 /**************************************************************************/
@@ -187,24 +187,24 @@ float Adafruit_BMP280::readTemperature(void)
   int32_t adc_T = read24(BMP280_REGISTER_TEMPDATA);
   adc_T >>= 4;
 
-  var1  = ((((adc_T>>3) - ((int32_t)_bmp280_calib.dig_T1 <<1))) *
-     ((int32_t)_bmp280_calib.dig_T2)) >> 11;
+  var1  = ((((adc_T >> 3) - ((int32_t)_bmp280_calib.dig_T1 << 1))) *
+           ((int32_t)_bmp280_calib.dig_T2)) >> 11;
 
-  var2  = (((((adc_T>>4) - ((int32_t)_bmp280_calib.dig_T1)) *
-       ((adc_T>>4) - ((int32_t)_bmp280_calib.dig_T1))) >> 12) *
-     ((int32_t)_bmp280_calib.dig_T3)) >> 14;
+  var2  = (((((adc_T >> 4) - ((int32_t)_bmp280_calib.dig_T1)) *
+             ((adc_T >> 4) - ((int32_t)_bmp280_calib.dig_T1))) >> 12) *
+           ((int32_t)_bmp280_calib.dig_T3)) >> 14;
 
   t_fine = var1 + var2;
 
   float T  = (t_fine * 5 + 128) >> 8;
-  return T/100;
+  return T / 100;
 }
 
 
 
 int32_t Adafruit_BMP280::readSealevelPressure(float altitude_meters) {
   float pressure = readPressure();
-  return (int32_t)(pressure / pow(1.0-altitude_meters/44330, 5.255));
+  return (int32_t)(pressure / pow(1.0 - altitude_meters / 44330, 5.255));
 }
 
 /**************************************************************************/
@@ -223,22 +223,22 @@ float Adafruit_BMP280::readPressure(void) {
 
   var1 = ((int64_t)t_fine) - 128000;
   var2 = var1 * var1 * (int64_t)_bmp280_calib.dig_P6;
-  var2 = var2 + ((var1*(int64_t)_bmp280_calib.dig_P5)<<17);
-  var2 = var2 + (((int64_t)_bmp280_calib.dig_P4)<<35);
-  var1 = ((var1 * var1 * (int64_t)_bmp280_calib.dig_P3)>>8) +
-    ((var1 * (int64_t)_bmp280_calib.dig_P2)<<12);
-  var1 = (((((int64_t)1)<<47)+var1))*((int64_t)_bmp280_calib.dig_P1)>>33;
+  var2 = var2 + ((var1 * (int64_t)_bmp280_calib.dig_P5) << 17);
+  var2 = var2 + (((int64_t)_bmp280_calib.dig_P4) << 35);
+  var1 = ((var1 * var1 * (int64_t)_bmp280_calib.dig_P3) >> 8) +
+         ((var1 * (int64_t)_bmp280_calib.dig_P2) << 12);
+  var1 = (((((int64_t)1) << 47) + var1)) * ((int64_t)_bmp280_calib.dig_P1) >> 33;
 
   if (var1 == 0) {
     return 0;  // avoid exception caused by division by zero
   }
   p = 1048576 - adc_P;
-  p = (((p<<31) - var2)*3125) / var1;
-  var1 = (((int64_t)_bmp280_calib.dig_P9) * (p>>13) * (p>>13)) >> 25;
+  p = (((p << 31) - var2) * 3125) / var1;
+  var1 = (((int64_t)_bmp280_calib.dig_P9) * (p >> 13) * (p >> 13)) >> 25;
   var2 = (((int64_t)_bmp280_calib.dig_P8) * p) >> 19;
 
-  p = ((p + var1 + var2) >> 8) + (((int64_t)_bmp280_calib.dig_P7)<<4);
-  return (float)p/256;
+  p = ((p + var1 + var2) >> 8) + (((int64_t)_bmp280_calib.dig_P7) << 4);
+  return (float)p / 256;
 }
 
 float Adafruit_BMP280::readAltitude(float seaLevelhPa) {
@@ -251,4 +251,3 @@ float Adafruit_BMP280::readAltitude(float seaLevelhPa) {
 
   return altitude;
 }
-

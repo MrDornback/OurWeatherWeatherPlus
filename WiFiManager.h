@@ -14,7 +14,7 @@
 #define WiFiManager_h
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <ESPWebServer.h>  //  ESP8266WebServer
 #include <DNSServer.h>
 #include <memory>
 #undef min
@@ -41,26 +41,26 @@ void writeEEPROMState();
 
 void updateDisplay(int displayType);
 /*
-const char HTTP_200[] PROGMEM = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-const char HTTP_HEAD[] PROGMEM = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><title>{v}</title>";
-const char HTTP_STYLE[] PROGMEM = "<style>div,input{padding:5px;font-size:1em;} input{width:95%;} body{text-align: center;} button{border:0;border-radius:0.3rem;background-color:#1fa3ec;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}</style>";
-const char HTTP_SCRIPT[] PROGMEM = "<script>function c(l){document.getElementById('s').value=l.innerText||l.textContent;document.getElementById('p').focus();}</script>";
-const char HTTP_HEAD_END[] PROGMEM = "</head><body><div style='text-align: left; display: inline-block;'>";
+  const char HTTP_200[] PROGMEM = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+  const char HTTP_HEAD[] PROGMEM = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><title>{v}</title>";
+  const char HTTP_STYLE[] PROGMEM = "<style>div,input{padding:5px;font-size:1em;} input{width:95%;} body{text-align: center;} button{border:0;border-radius:0.3rem;background-color:#1fa3ec;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;}</style>";
+  const char HTTP_SCRIPT[] PROGMEM = "<script>function c(l){document.getElementById('s').value=l.innerText||l.textContent;document.getElementById('p').focus();}</script>";
+  const char HTTP_HEAD_END[] PROGMEM = "</head><body><div style='text-align: left; display: inline-block;'>";
 
-const char HTTP_PORTAL_OPTIONS[] PROGMEM = "SwitchDoc Labs OurWeather<BR><form action=\"wifi\" method=\"get\"><button>Configure WiFi</button></form><br/><form action=\"0wifi\" method=\"get\"><button>Configure WiFi (No Scan)</button></form>";
-const char HTTP_ITEM[] PROGMEM = "<div><a href='#' onclick='c(this)'>{v}</a> {r}% {i}</div>";
-const char HTTP_ITEM_PADLOCK[] PROGMEM = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAKCAMAAAC+Ge+yAAAACVBMVEUAAAC7u7v///9etNz6AAAAI0lEQVQI133GsQ3AMAAEoXv2H9qNJacKFbEaWTQJ+uQB/nMdEaYAXeJkZ9AAAAAASUVORK5CYII='/>";
-const char HTTP_FORM[] PROGMEM = "<form method='get' action='wifisave'><input id='n' name='n' length=32 placeholder='your Station Name'>Station Name<br/><input id='s' name='s' length=32 placeholder='WiFi SSID'>Local WiFi name<br/><input id='p' name='p' length=64 placeholder='WiFi password'>WiFi Password<br/><br/><input id='a' name='a' length=64 placeholder='altitude in meters'>Alt in Meters<br/><br/><input id='d' name='d' length=64 placeholder='Mmm dd yyyy'>Set  Date Example:  Jan 07 2016<br/><br/><input id='t' name='t' length=64 placeholder='hh:mm:ss'>Set Time (hh:mm:ss) 24 hour time<br/><br/><button type='submit'>save</button></form>";
-const char HTTP_SAVED[] PROGMEM = "<div>Credentials Saved<br />Trying to connect OurWeather to network.<br />If it fails reconnect to AP, reset to try again</div>";
-const char HTTP_END[] PROGMEM = "</div></body></html>";
+  const char HTTP_PORTAL_OPTIONS[] PROGMEM = "SwitchDoc Labs OurWeather<BR><form action=\"wifi\" method=\"get\"><button>Configure WiFi</button></form><br/><form action=\"0wifi\" method=\"get\"><button>Configure WiFi (No Scan)</button></form>";
+  const char HTTP_ITEM[] PROGMEM = "<div><a href='#' onclick='c(this)'>{v}</a> {r}% {i}</div>";
+  const char HTTP_ITEM_PADLOCK[] PROGMEM = "<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAKCAMAAAC+Ge+yAAAACVBMVEUAAAC7u7v///9etNz6AAAAI0lEQVQI133GsQ3AMAAEoXv2H9qNJacKFbEaWTQJ+uQB/nMdEaYAXeJkZ9AAAAAASUVORK5CYII='/>";
+  const char HTTP_FORM[] PROGMEM = "<form method='get' action='wifisave'><input id='n' name='n' length=32 placeholder='your Station Name'>Station Name<br/><input id='s' name='s' length=32 placeholder='WiFi SSID'>Local WiFi name<br/><input id='p' name='p' length=64 placeholder='WiFi password'>WiFi Password<br/><br/><input id='a' name='a' length=64 placeholder='altitude in meters'>Alt in Meters<br/><br/><input id='d' name='d' length=64 placeholder='Mmm dd yyyy'>Set  Date Example:  Jan 07 2016<br/><br/><input id='t' name='t' length=64 placeholder='hh:mm:ss'>Set Time (hh:mm:ss) 24 hour time<br/><br/><button type='submit'>save</button></form>";
+  const char HTTP_SAVED[] PROGMEM = "<div>Credentials Saved<br />Trying to connect OurWeather to network.<br />If it fails reconnect to AP, reset to try again</div>";
+  const char HTTP_END[] PROGMEM = "</div></body></html>";
 */
 
 
 const char HTTP_200[] PROGMEM             = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
-const char HTTP_HEAD[] PROGMEM            = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\"/><title>{v}</title>";
+const char HTTP_HEADER_START[] PROGMEM            = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=no\"/><title>{v}</title>";
 const char HTTP_STYLE[] PROGMEM           = "<style>.c{text-align: center;} div,input{padding:5px;font-size:1em;} input{width:95%;} body{text-align: center;font-family:verdana;} button{border:0;border-radius:0.3rem;background-color:#1fa3ec;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;} .q{float: right;width: 64px;text-align: right;} .l{background: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAALVBMVEX///8EBwfBwsLw8PAzNjaCg4NTVVUjJiZDRUUUFxdiZGSho6OSk5Pg4eFydHTCjaf3AAAAZElEQVQ4je2NSw7AIAhEBamKn97/uMXEGBvozkWb9C2Zx4xzWykBhFAeYp9gkLyZE0zIMno9n4g19hmdY39scwqVkOXaxph0ZCXQcqxSpgQpONa59wkRDOL93eAXvimwlbPbwwVAegLS1HGfZAAAAABJRU5ErkJggg==\") no-repeat left center;background-size: 1em;}</style>";
 const char HTTP_SCRIPT[] PROGMEM          = "<script>function c(l){document.getElementById('s').value=l.innerText||l.textContent;document.getElementById('p').focus();}</script>";
-const char HTTP_HEAD_END[] PROGMEM        = "</head><body><div style='text-align:left;display:inline-block;min-width:260px;'>";
+const char HTTP_HEADER_END[] PROGMEM        = "</head><body><div style='text-align:left;display:inline-block;min-width:260px;'>";
 //const char HTTP_PORTAL_OPTIONS[] PROGMEM = "SwitchDoc Labs OurWeather<BR><form action=\"wifi\" method=\"get\"><button>Configure WiFi</button></form><br/><form action=\"0wifi\" method=\"get\"><button>Configure WiFi (No Scan)</button></form>";
 const char HTTP_PORTAL_OPTIONS[] PROGMEM = "SwitchDoc Labs OurWeather<BR><form action=\"wifi\" method=\"get\"><button>Configure WiFi</button></form>";
 //const char HTTP_PORTAL_OPTIONS[] PROGMEM  = "<form action=\"/wifi\" method=\"get\"><button>Configure WiFi</button></form><br/><form action=\"/0wifi\" method=\"get\"><button>Configure WiFi (No Scan)</button></form><br/><form action=\"/i\" method=\"get\"><button>Info</button></form><br/><form action=\"/r\" method=\"post\"><button>Reset</button></form>";
@@ -113,7 +113,7 @@ class WiFiManager
     boolean       autoConnect(char const *apName, char const *apPassword = NULL);
     boolean       justConnect(char const *apName, char const *apPassword = NULL);
 
-    
+
     //if you want to always start the config portal, without trying to connect first
     boolean       startConfigPortal(char const *apName, char const *apPassword = NULL);
 
@@ -158,7 +158,7 @@ class WiFiManager
 
   private:
     std::unique_ptr<DNSServer>        dnsServer;
-    std::unique_ptr<ESP8266WebServer> server;
+    std::unique_ptr<ESPWebServer> server;
 
     //const int     WM_DONE                 = 0;
     //const int     WM_WAIT                 = 10;
@@ -166,9 +166,9 @@ class WiFiManager
     //const String  HTTP_HEAD = "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><title>{v}</title>";
 
     void          setupConfigPortal();
-    #ifdef NO_EXTRA_4K_HEAP
+#ifdef NO_EXTRA_4K_HEAP
     void          startWPS();
-    #endif
+#endif
 
     const char*   _apName                 = "no-net";
     const char*   _apPassword             = NULL;
@@ -193,9 +193,9 @@ class WiFiManager
     int           _paramsCount            = 0;
     int           _minimumQuality         = -1;
     boolean       _shouldBreakAfterConfig = false;
-    #ifdef NO_EXTRA_4K_HEAP
+#ifdef NO_EXTRA_4K_HEAP
     boolean       _tryWPS                 = false;
-    #endif
+#endif
 
     const char*   _customHeadElement      = "";
 
@@ -203,6 +203,7 @@ class WiFiManager
     //void          setEEPROMString(int start, int len, String string);
 
     int           status = WL_IDLE_STATUS;
+    String        statusStr(int status);
     int           connectWifi(String ssid, String pass);
     uint8_t       waitForConnectResult();
 

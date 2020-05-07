@@ -174,7 +174,7 @@ class PubNub {
        @return boolean whether begin() was successful.
     */
     bool begin(const char *publish_key, const char *subscribe_key, const char *origin = "pubsub.pubnub.com") {
-    //bool begin(const char *publish_key, const char *subscribe_key, const char *origin = "192.168.1.107") {
+      //bool begin(const char *publish_key, const char *subscribe_key, const char *origin = "192.168.1.107") {
       d_publish_key = publish_key;
       d_subscribe_key = subscribe_key;
       d_origin = origin;
@@ -487,7 +487,7 @@ retry:
   /* connect() timeout is about 30s, much lower than our usual
      timeout is. */
   int rslt = client.connect(d_origin, 80);
- // int rslt = client.connect("c7488987-5106-4067-afe1-b9fd5aa648ee.mock.pstmn.io", 80);
+  // int rslt = client.connect("c7488987-5106-4067-afe1-b9fd5aa648ee.mock.pstmn.io", 80);
   if (rslt != 1) {
     DBGprint("Connection error ");
     DBGprintln(rslt);
@@ -514,48 +514,48 @@ retry:
   DBGprint("/0/");
 
   //Inject message, URI-escaping it in the process.
-   //  We are careful to save RAM by not using any copies
-   //  of the string or explicit buffers. 
+  //  We are careful to save RAM by not using any copies
+  //  of the string or explicit buffers.
   const char *pmessage = message;
 
   client.print(pmessage);
   DBGprintln(pmessage);
 
 
-// Removed for March 1, 2018 change at PubNub
-/*
-  while (pmessage[0]) {
-    //RFC 3986 Unreserved characters plus few
-    //   safe reserved ones. 
-    size_t okspan = strspn(pmessage, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~" ",=:;@[]");
-    if (okspan > 0) {
-      client.write((const uint8_t *) pmessage, okspan);
-      for (int i; i=0;i < okspan)
-        DBGprint(pmessage[i]);
-      pmessage += okspan;
+  // Removed for March 1, 2018 change at PubNub
+  /*
+    while (pmessage[0]) {
+      //RFC 3986 Unreserved characters plus few
+      //   safe reserved ones.
+      size_t okspan = strspn(pmessage, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~" ",=:;@[]");
+      if (okspan > 0) {
+        client.write((const uint8_t *) pmessage, okspan);
+        for (int i; i=0;i < okspan)
+          DBGprint(pmessage[i]);
+        pmessage += okspan;
+      }
+      if (pmessage[0]) {
+        //%-encode a non-ok character.
+        char enc[3] = {'%'};
+        enc[1] = "0123456789ABCDEF"[pmessage[0] / 16];
+        enc[2] = "0123456789ABCDEF"[pmessage[0] % 16];
+        client.write((const uint8_t *) enc, 3);
+        DBGprint(enc[1]);
+        DBGprint(enc[2]);
+        DBGprint(enc[3]);
+        pmessage++;
+      }
     }
-    if (pmessage[0]) {
-      //%-encode a non-ok character. 
-      char enc[3] = {'%'};
-      enc[1] = "0123456789ABCDEF"[pmessage[0] / 16];
-      enc[2] = "0123456789ABCDEF"[pmessage[0] % 16];
-      client.write((const uint8_t *) enc, 3);
-      DBGprint(enc[1]);
-      DBGprint(enc[2]);
-      DBGprint(enc[3]);
-      pmessage++;
-    }
-  }
 
-*/
+  */
   if (d_auth) {
     client.print(have_param ? '&' : '?');
-         DBGprint(have_param ? '&' : '?');
+    DBGprint(have_param ? '&' : '?');
     client.print("auth=");
-         DBGprint("auth=");
+    DBGprint("auth=");
     client.print(d_auth);
 
-         DBGprint(d_auth);
+    DBGprint(d_auth);
     have_param = 1;
   }
 

@@ -171,7 +171,7 @@ uint16_t Adafruit_ADS1015::readADC_SingleEnded(uint8_t channel) {
       config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
       break;
   }
- 
+
 
   // Set 'start single-conversion' bit
   config |= ADS1015_REG_CONFIG_OS_SINGLE;
@@ -367,8 +367,3 @@ int16_t Adafruit_ADS1015::getLastConversionResults()
     return (int16_t)res;
   }
 }
-
-
-
-
-

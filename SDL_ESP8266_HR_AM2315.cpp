@@ -2,8 +2,8 @@
     Heavily modified by SwitchDoc Labs for reliablity
   February 2018 and in 2017
 
-  
-  
+
+
   This is a library for the AM2315 Humidity & Temp Sensor
 
   Designed specifically to work with the AM2315 sensor from Adafruit

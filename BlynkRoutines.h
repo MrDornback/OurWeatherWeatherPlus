@@ -317,8 +317,8 @@ void myBTimerEvent()
     Blynk.virtualWrite(V84,  atof(floatString));
     Blynk.virtualWrite(V54, String(floatString)  + "V");
 
-  
-    
+
+
     dtostrf(LoadCurrent, 5, 1, floatString);
     Blynk.virtualWrite(V85, atof(floatString) );
     Blynk.virtualWrite(V55, String(floatString)  + "mA");
@@ -386,4 +386,3 @@ void myBTimerEvent()
 
   }
 */
-

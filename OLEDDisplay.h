@@ -132,9 +132,6 @@ void updateDisplay(int displayMode)
       {
         Serial.println("OurWeather Setup");
 
-
-
-
         setDisplayLine(0,  "Trying WiFi AP");
         buffer[0] = '\0';
         strcpy(buffer, Wssid.c_str());
@@ -277,7 +274,7 @@ void updateDisplay(int displayMode)
 
         setDisplayLine(0, "LIGHTNING!");
         setDisplayLine(1, "----------------");
-        setDisplayLine(2, const_cast<char*>(stringSolar.c_str()) ); 
+        setDisplayLine(2, const_cast<char*>(stringSolar.c_str()) );
         setDisplayLine(3, "----------------");
         setDisplayLine(4, "LIGHTNING!");
 
@@ -1576,4 +1573,3 @@ void OLEDDisplaySetup()   {
 
   }
 */
-

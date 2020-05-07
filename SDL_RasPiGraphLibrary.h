@@ -19,18 +19,18 @@ class SDL_RasPiGraphLibrary
 {
   public:
     SDL_RasPiGraphLibrary(int itemCount, int Mode);
-  
+
     int add_value(float value);
     void getRasPiString(char returnRasPiString[], char *buffer);
 
     void supply_labels(char *labels);
-    
+
     float returnMaxValue();
     float returnMinValue();
-  
-  
+
+
   private:
-  
+
     float *_myFloatArray;
     int _currentItemCount;
     int _Mode;
@@ -40,4 +40,3 @@ class SDL_RasPiGraphLibrary
 };
 
 #endif
-

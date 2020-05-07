@@ -4,30 +4,30 @@ int getAirQuality(void)
   // Values in this routine are for 16 bit ADC
 
   int16_t sensor_value = adsAirQuality.readADC_SingleEnded(0);
- // int16_t sensor_value = adsAirQuality.readADC_SingleEnded(0);
+  // int16_t sensor_value = adsAirQuality.readADC_SingleEnded(0);
   Serial.print("Sensor_Value=");
   Serial.print(sensor_value);
   Serial.print("--->");
 
 #ifdef DEBUG
   int i;
-  for (i=0;i<4;i++)
+  for (i = 0; i < 4; i++)
   {
-  int16_t sensor_value = adsAirQuality.readADC_SingleEnded(i);
- // int16_t sensor_value = adsAirQuality.readADC_SingleEnded(0);
-  Serial.print("Sensor_Value=");
-  Serial.print(sensor_value);
-  Serial.print("--->");
-  Serial.println(i);
-    
+    int16_t sensor_value = adsAirQuality.readADC_SingleEnded(i);
+    // int16_t sensor_value = adsAirQuality.readADC_SingleEnded(0);
+    Serial.print("Sensor_Value=");
+    Serial.print(sensor_value);
+    Serial.print("--->");
+    Serial.println(i);
+
   }
-  #endif
+#endif
 
   currentAirQualitySensor = sensor_value;
 
 
   // limit the conversion for the INT value
-  
+
   if (currentAirQualitySensor < 32000)
   {
     INTcurrentAirQualitySensor = currentAirQualitySensor;
@@ -36,7 +36,7 @@ int getAirQuality(void)
   {
     INTcurrentAirQualitySensor = 32000;
   }
-  
+
   if (sensor_value > 11200)
   {
     //Serial.println("Very High Pollution Detected");
@@ -71,59 +71,58 @@ int getAirQuality(void)
 String reportAirQuality(int latest)
 {
 
-switch (latest)
+  switch (latest)
   {
     case (0):
-    {
+      {
 
-      return "VHigh Pollu";
+        return "VHigh Pollu";
 
-      break;
-    }
+        break;
+      }
 
     case (1):
-    {
+      {
 
         return "High Pollu";
 
         break;
-    }
+      }
 
     case (2):
-    {
+      {
 
         return "Med Pollu";
 
         break;
-    }
+      }
 
     case (3):
-    {
+      {
 
         return "Low Pollu";
 
         break;
-    }
+      }
 
     case (4):
-    {
+      {
 
         return "Fresh Air";
 
         break;
-    }
+      }
 
 
-  default:
+    default:
 
-    {
-      return "NP";
+      {
+        return "NP";
 
 
-    }
+      }
   }
 
 
-        return "UNKWN";
+  return "UNKWN";
 }
-

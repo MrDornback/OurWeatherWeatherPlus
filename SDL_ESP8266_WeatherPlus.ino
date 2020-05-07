@@ -7,7 +7,7 @@
 //
 
 
-#define WEATHERPLUSESP8266VERSION "036"
+#define WEATHERPLUSESP8266VERSION "036-AHD-20200507-0830"
 
 #define WEATHERPLUSPUBNUBPROTOCOL "OURWEATHER036"
 
@@ -53,10 +53,10 @@ bool WiFiPresent = false;
 
 //needed for library
 #include <DNSServer.h>
-#include <ESP8266WebServer.h>
+// #include <ESP8266WebServer.h>  //  This library is superceded by ESPWebServer.h
+#include <ESPWebServer.h>
 
-
-
+//  Modified WiFiManager.h .cpp HTTP_HEAD -> HTTP_HEAD_START HTTP_HEAD_END
 #include "WiFiManager.h"          //https://github.com/tzapu/WiFiManager
 
 //gets called when WiFiManager enters configuration mode
@@ -74,8 +74,6 @@ void configModeCallback ()
 
 // OTA updated
 #include <ESP8266WiFiMulti.h>
-
-
 
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
@@ -111,8 +109,6 @@ WidgetTerminal statusTerminal(V32);
 #include "PubNub.h"
 
 
-
-
 // parsing function
 String getValue(String data, char separator, int index)
 {
@@ -131,18 +127,10 @@ String getValue(String data, char separator, int index)
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
-
-
 //
 
 char channel1[]  = "OWIOT1";
 char uuid[]   = WEATHERPLUSPUBNUBPROTOCOL;
-
-
-
-
-
-
 
 
 #include <Wire.h>
@@ -156,9 +144,6 @@ char uuid[]   = WEATHERPLUSPUBNUBPROTOCOL;
 #include "MaREST.h"
 
 #include <String.h>
-
-
-
 
 
 // display modes
@@ -197,10 +182,6 @@ String RestDataString;
 String Version;
 
 
-
-
-
-
 //----------------------------------------------------------------------
 //Local WiFi
 
@@ -232,46 +213,40 @@ aREST rest = aREST();
 // they can read any posted data from client, and they output to server
 
 
-
-
 #include "elapsedMillis.h"
-
 elapsedMillis timeElapsed; //declare global if you don't want it reset every time loop
-
 elapsedMillis timeElapsed300Seconds; //declare global if you don't want it reset every time loop
+
 
 // BMP180 / BMP280 Sensor
 // Both are stored in BMP180 variables
-//
+
+#include "MAdafruit_BMP085.h"
+Adafruit_BMP085 bmp;
 
 #include "MAdafruit_BMP280.h"
-#include "MAdafruit_BMP085.h"
 Adafruit_BMP280 bme;
 
-Adafruit_BMP085 bmp;
 #define SENSORS_PRESSURE_SEALEVELHPA 1015.00
+
 float altitude_meters;
 float BMP180_Temperature;
 float BMP180_Pressure;
 float BMP180_Altitude;
-
 bool BMP180Found;
 bool BMP280Found;
-
 
 int EnglishOrMetric;   // 0 = English units, 1 = Metric
 
 int WeatherDisplayMode;
 
+
 // DS3231 Library functions
-
 #include "RtcDS3231.h"
-
 RtcDS3231 Rtc;
 
 
 // AM2315
-
 float AM2315_Temperature;
 float AM2315_Humidity;
 float dewpoint;
@@ -401,14 +376,7 @@ void setAS3935Parameters()
 
 
 
-
-
-
-
-
   // lightning state variables as3935
-
-
 
   // first let's turn on disturber indication and print some register values from AS3935
   // tell AS3935 we are indoors, for outdoors use setOutdoors() function
@@ -560,12 +528,6 @@ SDL_Weather_80422 weatherStation(pinAnem, pinRain, 0, 0, A0, SDL_MODE_I2C_ADS101
 // RasPiConnect
 
 
-
-
-
-
-
-
 long messageCount;
 
 static uint8_t mac[] = LOCALMAC;
@@ -601,8 +563,6 @@ float lastRain;
 
 
 
-
-
 // OLED Constants
 
 
@@ -617,7 +577,6 @@ float lastRain;
 
 
 #include "SDL2PubNub.h"
-
 
 
 // SunAirPlus
@@ -786,7 +745,7 @@ void setup() {
   WeatherUnderground_StationKey = "YYYY";
 
   adminPassword = "admin";
-  altitude_meters = 637.0;  // default to 611
+  altitude_meters = 155.448;  // default to 611
 
   pinMode(blinkPin, OUTPUT);        // pin that will blink every reading
   digitalWrite(blinkPin, HIGH);  // High of this pin is LED OFF
@@ -805,16 +764,17 @@ void setup() {
   RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
   Serial.println("--------");
   printDateTime(compiled);
-  Serial.println("--------");
+  Serial.println("\n--------");
   Serial.println();
 
   if (!Rtc.IsDateTimeValid())
   {
-    // Common Cuases:
+    // Common Causes:
     //    1) first time you ran and the device wasn't running yet
     //    2) the battery on the device is low or even missing
 
-    Serial.println("RTC lost confidence in the DateTime!");
+    //Serial.println("RTC lost confidence in the DateTime!");
+    Serial.println("RTC failed DateTime check!");
 
     // following line sets the RTC to the date & time this sketch was compiled
     // it will also reset the valid flag internally unless the Rtc device is
@@ -895,7 +855,7 @@ void setup() {
 
   if (noiseFloor == 2)
   {
-    Serial.println("AS3935 Present");
+    Serial.println("AS3935 Found");
     AS3935Present = true;
   }
   else
@@ -1016,19 +976,12 @@ void setup() {
     if (client.available())
     {
 
-
-
-
       rest.handle(client);
 
     }
   }
   // health indications for device
   rest.variable("ESP8266HeapSize", &heapSize);
-
-
-
-
 
 
   // Function to be exposed
@@ -1051,7 +1004,6 @@ void setup() {
 
   rest.function("resetWiFiAccessPoint", resetWiFiAccessPoint);
   rest.function("updateOurWeather", updateOurWeather);
-
 
 
   // external interfaces
@@ -1085,18 +1037,11 @@ void setup() {
 
 
 
-
-
   // Give name and ID to device
   rest.set_id("1");
   rest.set_name("OurWeather");
 
-
-
   initialize60MinuteRain();
-
-
-
 
 
   Serial.println();
@@ -1128,7 +1073,7 @@ void setup() {
   else
   {
     SunAirPlus_Present = true;
-    Serial.println("SunAirPlus Present");
+    Serial.println("SunAirPlus Detected");
   }
 
   // test for WXLink Present
@@ -1158,7 +1103,7 @@ void setup() {
   else
   {
 
-    Serial.println("WXLink Present");
+    Serial.println("WXLink Detected");
   }
 
 
@@ -1183,7 +1128,7 @@ void setup() {
   if (ad0 != -1)
   {
     AirQualityPresent = true;
-    Serial.println("AirQuality Extension Present");
+    Serial.println("AirQuality Extension Detected");
   }
   else
   {
@@ -1195,8 +1140,7 @@ void setup() {
   randomSeed(analogRead(0));
 
   lastBoot = Rtc.GetDateTime();
-
-
+  Serial.print("lastBoot= "); Serial.println(lastBoot);
 
   Serial.print("OurWeather IP Address:");
   Serial.println(WiFi.localIP());
@@ -1228,7 +1172,7 @@ void setup() {
   if (!bmp.begin())
   {
     /* There was a problem detecting the BM180 ... check your connections */
-    Serial.println("No BMP180 detected ");
+    Serial.println("BMP180 Not Present");
     BMP180Found = false;
 
   }
@@ -1244,7 +1188,7 @@ void setup() {
   if (!bme.begin())
   {
 
-    Serial.println("No BMP280 detected ");
+    Serial.println("BMP280 Not Present");
     BMP280Found = false;
 
   }
@@ -1267,7 +1211,7 @@ void setup() {
 
   if (AOK) {
 
-    Serial.println("AM2315 Detected...");
+    Serial.println("AM2315 Detected");
 
     Serial.print("Hum: "); Serial.println(dataAM2315[1]);
     Serial.print("TempF: "); Serial.println(dataAM2315[0]);
@@ -1282,7 +1226,7 @@ void setup() {
   else
   {
 
-    Serial.println("AM2315 Sensor not found");
+    Serial.println("AM2315 Sensor not Present");
 
   }
 
@@ -1301,18 +1245,16 @@ void setup() {
   if (sht30_success == 0)
   {
     SHT30_Present = true;
-    Serial.println("SHT30 Found");
+    Serial.println("SHT30 Detected");
     Serial.print("SHT30Temp=");
     Serial.println(sht30.cTemp);
     Serial.print("SHT30Humid=");
     Serial.println(sht30.humidity);
 
-
-
   }
   else
   {
-    Serial.println("SHT30 Not Found");
+    Serial.println("SHT30 Not Present");
     SHT30_Present = false;
   }
 
@@ -1324,12 +1266,8 @@ void setup() {
     Serial.println("PubNub set up");
   }
 
-
-
-
   if (UseBlynk == true)
   {
-
 
 
     Blynk.config(BlynkAuthCode.c_str());
@@ -1363,7 +1301,7 @@ void setup() {
     // Print out the presents
     if (SunAirPlus_Present)
     {
-      writeToBlynkStatusTerminal("SunAirPlus Present");
+      writeToBlynkStatusTerminal("SunAirPlus Detected");
 
     }
     else
@@ -1373,7 +1311,7 @@ void setup() {
 
     if (WXLink_Present)
     {
-      writeToBlynkStatusTerminal("WXLink Present");
+      writeToBlynkStatusTerminal("WXLink Detected");
 
     }
     else
@@ -1383,7 +1321,7 @@ void setup() {
 
     if (AirQualityPresent)
     {
-      writeToBlynkStatusTerminal("Air Quality Sensor Present");
+      writeToBlynkStatusTerminal("Air Quality Sensor Detected");
 
     }
     else
@@ -1391,9 +1329,19 @@ void setup() {
       writeToBlynkStatusTerminal("Air Quality Sensor Not Present");
     }
 
+    if (BMP180Found)
+    {
+      writeToBlynkStatusTerminal("BMP180 Detected");
+
+    }
+    else
+    {
+      writeToBlynkStatusTerminal("BMP180 Not Present");
+    }
+
     if (BMP280Found)
     {
-      writeToBlynkStatusTerminal("BMP280 Present");
+      writeToBlynkStatusTerminal("BMP280 Detected");
 
     }
     else
@@ -1403,7 +1351,7 @@ void setup() {
 
     if (AM2315_Present)
     {
-      writeToBlynkStatusTerminal("AM2315 Present");
+      writeToBlynkStatusTerminal("AM2315 Detected");
 
     }
     else
@@ -1413,7 +1361,7 @@ void setup() {
 
     if (SHT30_Present)
     {
-      writeToBlynkStatusTerminal("SHT30 Present");
+      writeToBlynkStatusTerminal("SHT30 Detected");
 
     }
     else
@@ -1424,7 +1372,7 @@ void setup() {
 
     if (AS3935Present)
     {
-      writeToBlynkStatusTerminal("AS3935 ThunderBoard Present");
+      writeToBlynkStatusTerminal("AS3935 ThunderBoard Detected");
 
     }
     else
@@ -1458,6 +1406,8 @@ void setup() {
 //
 //
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -1493,16 +1443,9 @@ void loop() {
   client.stop();
 
 
-
-
   if (timeElapsed > 5000)
   {
     Serial.println("5 second Loop executed");
-
-
-
-
-
 
     timeElapsed = 0;
 
@@ -1510,19 +1453,16 @@ void loop() {
     heapSize = ESP.getFreeHeap();
     Serial.println(heapSize, DEC);
 
-
     tmElements_t tm;
     Serial.println("---------------");
-    Serial.println("DS3231 Clock");
+    Serial.println("DS3231 RTC Real-Time-Clock");
     Serial.println("---------------");
-
+    
     RtcDateTime now = Rtc.GetDateTime();
 
     String currentTimeString;
     currentTimeString = returnDateTime(now);
-
-
-    Serial.println(currentTimeString);
+    Serial.print("RTC Time= "); Serial.println(currentTimeString);
 
     RestTimeStamp = currentTimeString;
 
@@ -1539,9 +1479,12 @@ void loop() {
     {
       Serial.println("AM2315 Not Present");
     }
+    Serial.println("---------------");
 
     Serial.println("---------------");
-    Serial.println();
+    Serial.println("DHT Not Implemented");
+    Serial.println("---------------");
+
     Serial.println("---------------");
     if (SHT30_Present)
     {
@@ -1614,11 +1557,11 @@ void loop() {
 
     Serial.println("---------------");
     if (BMP180Found)
-      Serial.println("BMP180");
+      Serial.println("BMP180 Found");
     else if (BMP280Found)
-      Serial.println("BMP280");
+      Serial.println("BME280 Found");
     else
-      Serial.println("No BMP180/BMP280 Found");
+      Serial.println("BMP180/BME280 Not Present");
     Serial.println("---------------");
 
 
@@ -1768,8 +1711,6 @@ void loop() {
 
       Serial.println(ad3);
 
-
-
       int16_t ad0_0x49 = ads1015.readADC_SingleEnded(0);
       int16_t ad1_0x49 = ads1015.readADC_SingleEnded(1);
       int16_t ad2_0x49 = ads1015.readADC_SingleEnded(2);
@@ -1791,7 +1732,7 @@ void loop() {
 
     Serial.println("---------------");
     if (SunAirPlus_Present)
-      Serial.println("SunAirPlus");
+      Serial.println("SunAirPlus Detected");
     else
       Serial.println("SunAirPlus Not Present");
     Serial.println("---------------");
@@ -1872,11 +1813,9 @@ void loop() {
     }
 
 
-
-
     Serial.println("---------------");
     Serial.println("WeatherRack");
-    Serial.println("---------------");
+    Serial.println(" - - - - - - - - -");
 
     if (WXLink_Present == false)
     {
@@ -1982,41 +1921,30 @@ void loop() {
            Serial.println("");
         */
 
-
-
-
       }
-
-
-
 
     }
 
 
-
-
-
-
-
-    Serial.print("windSpeedMin =");
+    Serial.print("windSpeedMin=");
     Serial.print(windSpeedMin);
-    Serial.print(" windSpeedMax =");
+    Serial.print(" \twindSpeedMax=");
     Serial.println(windSpeedMax);
 #ifdef DEBUGPRINT
     Serial.print("windSpeedBuffer=");
     Serial.println(windSpeedBuffer);
 #endif
-    Serial.print("windGustMin =");
+    Serial.print("windGustMin=");
     Serial.print(windGustMin);
-    Serial.print(" windGustMax =");
+    Serial.print(" \twindGustMax =");
     Serial.println(windGustMax);
 #ifdef DEBUGPRINT
     Serial.print("windGustBuffer=");
     Serial.println(windGustBuffer);
 #endif
-    Serial.print("windDirectionMin =");
+    Serial.print("windDirectionMin=");
     Serial.print(windDirectionMin);
-    Serial.print(" windDirectionMax =");
+    Serial.print(" \twindDirectionMax=");
     Serial.println(windDirectionMax);
 
 #ifdef DEBUGPRINT
@@ -2027,18 +1955,15 @@ void loop() {
     Serial.print(currentWindSpeed);
 
     Serial.print(" \tcurrentWindGust=");
-    Serial.print (currentWindGust);
+    Serial.println(currentWindGust);
 
-    Serial.print(" \tWind Direction=");
-    Serial.print(currentWindDirection);
+    Serial.print("Wind Direction=");
+    Serial.println(currentWindDirection);
 
-
-    Serial.print(" \t\tCumulative Rain = ");
+    Serial.print("Cumulative Rain = ");
     Serial.println(rainTotal);
 
-
     Serial.println(" ");
-
 
 
     RestDataString += String(currentWindSpeed, 2) + ",";

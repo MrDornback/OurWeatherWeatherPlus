@@ -5,9 +5,9 @@
 // ----------
 // Note:  This program is designed for you to supply your own functions in a file called Local.h
 // Out of the box, the program uses LocalExample.h included in ExecuteJSONCommand.h
-// 
+//
 // If you change LocalExample.h and update the software, LocalExample.h WILL BE OVERWRITTEN!
-// 
+//
 // Change #define LOCALFILE "LocalExample.h" to #define LOCALFILE  "Local.h" to #include "Local.h" in ExecuteJSONCommand.h
 // ----------
 #define LOCALFILE "Local.h"
@@ -16,7 +16,7 @@
 #define DEBUG
 
 //define if you want to only debug local files, otherwise #undef
-#define LOCALDEBUG 
+#define LOCALDEBUG
 
 //WEB_SERVER_PORT is the port that the Arduino Webserver will be responding to requests from the RasPiConnect/ArduinoConnect App
 #define WEB_SERVER_PORT 80
